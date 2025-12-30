@@ -54,10 +54,7 @@
         }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
-        /* 문항 1: 3x2 그리드 */
         .tarot-grid-3x2 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; width: 100%; margin-top: 1rem; }
-        
-        /* 문항 2, 3: 세로형 카드 배치 (3열) */
         .option-grid-vertical { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; width: 100%; margin-top: 1rem; }
 
         .tarot-card {
@@ -77,6 +74,13 @@
 
         #progress-bar { transition: width 0.4s ease; background: linear-gradient(90deg, #3CCCD4 0%, #7C3AED 100%); }
         .choice-summary { background-color: #F9FAFB; border-radius: 1.5rem; width: 100%; padding: 1.5rem; margin-top: 2rem; border: 1px dashed rgba(60, 204, 212, 0.2); text-align: center; }
+
+        /* 로딩 애니메이션용 */
+        .loading-dots:after {
+            content: '.';
+            animation: dots 1.5s steps(5, end) infinite;
+        }
+        @keyframes dots { 0%, 20% { content: '.'; } 40% { content: '..'; } 60% { content: '...'; } 80%, 100% { content: ''; } }
     </style>
 </head>
 <body>
@@ -114,9 +118,9 @@
     <div id="step-2" class="step">
         <h2 class="text-[20px] font-bold mb-8 text-gray-800 animated-title">내 블로그는 하루 평균<br>이 정도 방문해요!</h2>
         <div class="option-grid-vertical">
-            <div onclick="save('q2', '초급', '🌱')" class="tarot-card"><span>🌱</span><span class="label">초급<br>(0~300명)</span></div>
-            <div onclick="save('q2', '중급', '🌿')" class="tarot-card"><span>🌿</span><span class="label">중급<br>(300~2k)</span></div>
-            <div onclick="save('q2', '상급', '🌳')" class="tarot-card"><span>🌳</span><span class="label">상급<br>(2k 이상)</span></div>
+            <div onclick="save('q2', '0~300명', '🌱')" class="tarot-card"><span>🌱</span><span class="label">0~300명</span></div>
+            <div onclick="save('q2', '300~2,000명', '🌿')" class="tarot-card"><span>🌿</span><span class="label">300~2,000명</span></div>
+            <div onclick="save('q2', '2,000명 이상', '🌳')" class="tarot-card"><span>🌳</span><span class="label">2,000명 이상</span></div>
         </div>
     </div>
 
@@ -129,14 +133,22 @@
         </div>
     </div>
 
+    <div id="step-loading" class="step">
+        <div class="glass-orb scale-75"></div>
+        <h2 class="text-[21px] font-bold text-gray-800 animated-title">
+            나의 데이터 분석 중<span class="loading-dots"></span><br>
+            <span class="text-sm font-medium text-gray-500 mt-2 block">적절한 제휴 메이트를 찾는 중입니다</span>
+        </h2>
+    </div>
+
     <div id="step-result" class="step">
         <div class="mb-2 text-[#3CCCD4] text-[12px] font-black tracking-widest uppercase" id="persona-name"></div>
         <h2 id="final-brand" class="text-[40px] font-black mb-8 text-gray-900 tracking-tighter leading-tight"></h2>
         
         <div class="grid grid-cols-3 gap-3 w-full mb-8">
-            <div class="bg-gray-50 py-4 rounded-2xl border border-gray-100"><p class="text-[10px] text-gray-400 font-bold mb-1">수익력</p><p class="font-extrabold text-[#3CCCD4] text-lg">높음</p></div>
-            <div class="bg-gray-50 py-4 rounded-2xl border border-gray-100"><p class="text-[10px] text-gray-400 font-bold mb-1">영향력</p><p class="font-extrabold text-[#3CCCD4] text-lg">높음</p></div>
-            <div class="bg-gray-50 py-4 rounded-2xl border border-gray-100"><p class="text-[10px] text-gray-400 font-bold mb-1">궁합도</p><p class="font-extrabold text-[#3CCCD4] text-lg"><span id="match-rate"></span></p></div>
+            <div class="bg-gray-50 py-4 rounded-2xl border border-gray-100"><p class="text-[10px] text-gray-400 font-bold mb-1 uppercase">수익력</p><p class="font-extrabold text-[#3CCCD4] text-lg">높음</p></div>
+            <div class="bg-gray-50 py-4 rounded-2xl border border-gray-100"><p class="text-[10px] text-gray-400 font-bold mb-1 uppercase">영향력</p><p class="font-extrabold text-[#3CCCD4] text-lg">높음</p></div>
+            <div class="bg-gray-50 py-4 rounded-2xl border border-gray-100"><p class="text-[10px] text-gray-400 font-bold mb-1 uppercase">궁합도</p><p class="font-extrabold text-[#3CCCD4] text-lg"><span id="match-rate"></span></p></div>
         </div>
 
         <button onclick="location.reload()" class="capsule-button">첫 링크 생성하러 가기 🔗</button>
@@ -151,26 +163,48 @@
 <script>
     let answers = {};
     function startTest() { document.getElementById('progress-container').classList.remove('hidden'); nextStep(1); }
+    
     function nextStep(n) {
         document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-        const targetId = (n === 'result' ? 'step-result' : 'step-' + n);
+        let targetId;
+        if(n === 'loading') targetId = 'step-loading';
+        else if(n === 'result') targetId = 'step-result';
+        else targetId = 'step-' + n;
+        
         document.getElementById(targetId).classList.add('active');
-        const progressMap = { 1: 33, 2: 66, 3: 100, 'result': 100 };
-        document.getElementById('progress-bar').style.width = (progressMap[n] || 0) + '%';
-        document.getElementById('percent-text').innerText = (progressMap[n] || 0) + '%';
+        
+        const progressMap = { 1: 25, 2: 50, 3: 75, 'loading': 90, 'result': 100 };
+        const percent = progressMap[n] || 0;
+        document.getElementById('progress-bar').style.width = percent + '%';
+        document.getElementById('percent-text').innerText = percent + '%';
     }
+
     function save(q, val, icon) {
         answers[q] = { text: val, icon: icon };
         const cur = parseInt(q.charAt(1));
-        if (cur < 3) nextStep(cur + 1); else calculate();
+        if (cur < 3) {
+            nextStep(cur + 1);
+        } else {
+            // 문항 3 완료 시 로딩 단계로 진입
+            showLoading();
+        }
     }
+
+    function showLoading() {
+        nextStep('loading');
+        // 2.5초 후 결과 계산 및 출력
+        setTimeout(() => {
+            calculate();
+        }, 2500);
+    }
+
     function calculate() {
         let brand = ""; let persona = "";
         const q1 = answers.q1.text; const q2 = answers.q2.text; const q3 = answers.q3.text;
 
-        document.getElementById('user-review').innerHTML = `최근 이용한 <span class="text-gray-900 font-bold">${answers.q1.icon} ${q1}</span> 소재를 바탕으로, <span class="text-gray-900 font-bold">${answers.q2.icon} ${q2} 단계</span> 블로그에서 <span class="text-gray-900 font-bold">${answers.q3.icon} ${q3}</span> 스타일로 수익화를 준비 중이시군요.`;
+        document.getElementById('user-review').innerHTML = `최근 이용한 <span class="text-gray-900 font-bold">${answers.q1.icon} ${q1}</span> 소재를 바탕으로, <span class="text-gray-900 font-bold">${answers.q2.icon} ${q2}</span> 블로그에서 <span class="text-gray-900 font-bold">${answers.q3.icon} ${q3}</span> 스타일로 수익화를 준비 중이시군요.`;
 
-        // 매칭 로직 (질문 1 기반 확정 매칭)
+        // 매칭 로직
         if (q1 === '숙소') { brand = "아고다"; persona = "스테이 큐레이터"; }
         else if (q1 === '액티비티') { brand = "클룩"; persona = "익스피리언스 디렉터"; }
         else if (q1 === '인테리어') { brand = "오늘의집"; persona = "라이프스타일 에디터"; }
@@ -181,7 +215,6 @@
         document.getElementById('persona-name').innerText = "수익 페르소나: " + persona;
         document.getElementById('final-brand').innerText = brand;
         
-        // 궁합도: 80%~99% 사이 난수 생성
         const randomMatchRate = Math.floor(Math.random() * (99 - 80 + 1)) + 80;
         document.getElementById('match-rate').innerText = randomMatchRate + '%';
 
