@@ -169,7 +169,7 @@
             <div class="bg-gray-50 py-4 rounded-2xl border border-gray-100"><p class="text-[10px] text-gray-400 font-bold mb-1 uppercase">궁합도</p><p class="font-extrabold text-[#3CCCD4] text-lg"><span id="match-rate"></span></p></div>
         </div>
 
-        <button onclick="window.open('https://3ha.featurebase.app/ko/help/collections/7417473-jehyuringkeu-saengseong-gaideu-moeum-zip', '_blank')" class="capsule-button">가이드 확인하고 링크 만들기 🔗</button>
+        <button onclick="location.reload()" class="capsule-button">제휴링크 생성하러 가기 🔗</button>
 
         <div class="choice-summary">
             <p class="text-[11px] font-black text-[#3CCCD4] uppercase mb-2">나의 선택 리포트</p>
@@ -182,7 +182,6 @@
     let answers = {};
     let currentStepIndex = 0;
 
-    // 카테고리별 스타터 최고 수수료 브랜드 1개 매칭
     const bestAffiliate = {
         '숙소': { brand: '아고다', persona: '스테이 큐레이터' },
         '액티비티': { brand: '클룩', persona: '익스피리언스 디렉터' },
@@ -243,7 +242,7 @@
         
         document.getElementById('user-review').innerHTML = `최근 이용한 <span class="text-gray-900 font-bold">${answers.q1.icon} ${q1Text}</span> 경험을 바탕으로, <span class="text-gray-900 font-bold">${answers.q2.icon} ${answers.q2.text}</span> 규모 블로그에 기록하는 크리에이터`;
 
-        const randomMatchRate = Math.floor(Math.random() * (100 - 95 + 1)) + 95; // 단일 추천이므로 궁합도를 높게 설정
+        const randomMatchRate = Math.floor(Math.random() * (100 - 95 + 1)) + 95;
         document.getElementById('match-rate').innerText = randomMatchRate + '%';
 
         nextStep('result');
