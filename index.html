@@ -54,7 +54,10 @@
         }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
+        /* 문항 1: 3x2 그리드 */
         .tarot-grid-3x2 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; width: 100%; margin-top: 1rem; }
+        
+        /* 문항 2, 3: 세로형 카드 배치 (3열) */
         .option-grid-vertical { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; width: 100%; margin-top: 1rem; }
 
         .tarot-card {
@@ -100,29 +103,29 @@
         <h2 class="text-[20px] font-bold mb-8 text-gray-800 animated-title">최근 이용한 상품 중<br>기억에 남은 한 가지는?</h2>
         <div class="tarot-grid-3x2">
             <div onclick="save('q1', '숙소', '🏨')" class="tarot-card"><span>🏨</span><span class="label">숙소</span></div>
-            <div onclick="save('q1', '투어', '🎡')" class="tarot-card"><span>🎡</span><span class="label">액티비티</span></div>
-            <div onclick="save('q1', '리빙', '🛋️')" class="tarot-card"><span>🛋️</span><span class="label">인테리어</span></div>
-            <div onclick="save('q1', '항공', '✈️')" class="tarot-card"><span>✈️</span><span class="label">항공권</span></div>
+            <div onclick="save('q1', '액티비티', '🎡')" class="tarot-card"><span>🎡</span><span class="label">액티비티</span></div>
+            <div onclick="save('q1', '인테리어', '🛋️')" class="tarot-card"><span>🛋️</span><span class="label">인테리어</span></div>
+            <div onclick="save('q1', '항공권', '✈️')" class="tarot-card"><span>✈️</span><span class="label">항공권</span></div>
             <div onclick="save('q1', '유심', '📱')" class="tarot-card"><span>📱</span><span class="label">유심</span></div>
             <div onclick="save('q1', '렌터카', '🚗')" class="tarot-card"><span>🚗</span><span class="label">렌터카</span></div>
         </div>
     </div>
 
     <div id="step-2" class="step">
-        <h2 class="text-[20px] font-bold mb-8 text-gray-800 animated-title">그 경험의 가장 큰 매력은?</h2>
+        <h2 class="text-[20px] font-bold mb-8 text-gray-800 animated-title">블로그의 하루 평균<br>방문자 수는 어느 정도인가요?</h2>
         <div class="option-grid-vertical">
-            <div onclick="save('q2', '경제성', '💰')" class="tarot-card"><span>💰</span><span class="label">경제적<br>가격</span></div>
-            <div onclick="save('q2', '심미성', '✨')" class="tarot-card"><span>✨</span><span class="label">분위기<br>감성</span></div>
-            <div onclick="save('q2', '편의성', '🛠️')" class="tarot-card"><span>🛠️</span><span class="label">편리한<br>이용</span></div>
+            <div onclick="save('q2', '초급', '🌱')" class="tarot-card"><span>🌱</span><span class="label">초급<br>(0~300명)</span></div>
+            <div onclick="save('q2', '중급', '🌿')" class="tarot-card"><span>🌿</span><span class="label">중급<br>(300~2k)</span></div>
+            <div onclick="save('q2', '상급', '🌳')" class="tarot-card"><span>🌳</span><span class="label">상급<br>(2k 이상)</span></div>
         </div>
     </div>
 
     <div id="step-3" class="step">
-        <h2 class="text-[20px] font-bold mb-8 text-gray-800 animated-title">어떤 스타일로 기록할까요?</h2>
+        <h2 class="text-[20px] font-bold mb-8 text-gray-800 animated-title">포스팅 하나를 완성하는 데<br>얼마나 걸리시나요?</h2>
         <div class="option-grid-vertical">
-            <div onclick="save('q3', '비주얼', '📸')" class="tarot-card"><span>📸</span><span class="label">비주얼<br>중심</span></div>
-            <div onclick="save('q3', '정보전달', '🔍')" class="tarot-card"><span>🔍</span><span class="label">상세한<br>정보</span></div>
-            <div onclick="save('q3', '후기', '💬')" class="tarot-card"><span>💬</span><span class="label">진솔한<br>후기</span></div>
+            <div onclick="save('q3', '30분 이내', '⚡')" class="tarot-card"><span>⚡</span><span class="label">스피드형<br>(~30분)</span></div>
+            <div onclick="save('q3', '1시간 내외', '✍️')" class="tarot-card"><span>✍️</span><span class="label">집중형<br>(~1시간)</span></div>
+            <div onclick="save('q3', '2시간 이상', '💎')" class="tarot-card"><span>💎</span><span class="label">정성형<br>(2시간+)</span></div>
         </div>
     </div>
 
@@ -165,42 +168,22 @@
         let brand = ""; let persona = "";
         const q1 = answers.q1.text; const q2 = answers.q2.text; const q3 = answers.q3.text;
 
-        document.getElementById('user-review').innerHTML = `최근 <span class="text-gray-900 font-bold">${answers.q1.icon} ${q1}</span> 상품의 <span class="text-gray-900 font-bold">${answers.q2.icon} ${q2}</span>에 매력을 느끼고, <span class="text-gray-900 font-bold">${answers.q3.icon} ${q3}</span> 스타일의 기록을 준비 중이시군요.`;
+        document.getElementById('user-review').innerHTML = `최근 이용한 <span class="text-gray-900 font-bold">${answers.q1.icon} ${q1}</span> 소재를 바탕으로, <span class="text-gray-900 font-bold">${answers.q2.icon} ${q2} 단계</span> 블로그에서 <span class="text-gray-900 font-bold">${answers.q3.icon} ${q3}</span> 스타일로 수익화를 준비 중이시군요.`;
 
-        if (q1 === '숙소') {
-            brand = (q2 === '심미성') ? "스테이앤모어" : (q2 === '경제성' ? "아고다" : "야놀자");
-            persona = "스테이 큐레이터";
-        } else if (q1 === '투어' || q1 === '유심') {
-            brand = (q2 === '경제성') ? "클룩" : "마이리얼트립";
-            persona = "익스피리언스 디렉터";
-        } else if (q1 === '항공' || q1 === '렌터카') {
-            brand = "트립닷컴"; persona = "스마트 트래블러";
-        } else {
-            brand = "오늘의 집"; persona = "라이프스타일 에디터";
-        }
+        // 매칭 로직 (질문 1 기반 확정 매칭)
+        if (q1 === '숙소') { brand = "아고다"; persona = "스테이 큐레이터"; }
+        else if (q1 === '액티비티') { brand = "클룩"; persona = "익스피리언스 디렉터"; }
+        else if (q1 === '인테리어') { brand = "오늘의집"; persona = "라이프스타일 에디터"; }
+        else if (q1 === '항공권') { brand = "트립닷컴"; persona = "글로벌 트래블러"; }
+        else if (q1 === '유심') { brand = "유심사"; persona = "데이터 커넥터"; }
+        else if (q1 === '렌터카') { brand = "클룩"; persona = "스마트 로드 가이드"; }
 
         document.getElementById('persona-name').innerText = "수익 페르소나: " + persona;
         document.getElementById('final-brand').innerText = brand;
         
-        // [수정] 너가 판단하기에 '유저가 선택한 문항 내용'과 결과의 실제 궁합도를 바탕으로 산출
-        let score = 80; // 기본 점수
-        
-        // 1. 매력 포인트(q2)와 기록 스타일(q3)의 시너지 판단
-        if (q2 === '심미성' && q3 === '비주얼') score += 12; // 감성적인 소재를 시각적으로 보여줌 (최적)
-        else if (q2 === '경제성' && q3 === '정보전달') score += 10; // 실속 정보를 상세하게 알려줌 (최적)
-        else if (q2 === '편의성' && q3 === '후기') score += 8; // 실제 이용 편의를 진솔하게 전달 (좋음)
-        else if (q2 === '경제성' && q3 === '비주얼') score += 5; // 저렴한 가격을 사진으로 증명
-        else if (q2 === '심미성' && q3 === '정보전달') score += 6; // 예쁜 곳의 정보를 꼼꼼히 기록
-        
-        // 2. 소재(q1)와 매력 포인트(q2)의 결합 적합도 판단
-        if (q1 === '유심' && q2 === '경제성') score += 5;
-        if (q1 === '항공' && q2 === '편의성') score += 4;
-        if (q1 === '숙소' && q2 === '심미성') score += 5;
-        if (q1 === '렌터카' && q2 === '편의성') score += 4;
-        
-        // 3. 미세 난수 보정 (항상 80~99 사이 유지)
-        const finalScore = Math.min(99, score + (Math.floor(Math.random() * 3)));
-        document.getElementById('match-rate').innerText = finalScore + '%';
+        // 궁합도: 80%~99% 사이 난수 생성
+        const randomMatchRate = Math.floor(Math.random() * (99 - 80 + 1)) + 80;
+        document.getElementById('match-rate').innerText = randomMatchRate + '%';
 
         nextStep('result');
     }
