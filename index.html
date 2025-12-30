@@ -75,3 +75,184 @@
 
         .capsule-button {
             background-color: var(--btn-bg); color: var(--btn-text);
+            border-radius: 9999px; width: 100%; padding: 1.1rem;
+            font-weight: 700; font-size: 1.1rem; transition: all 0.2s ease; margin-top: 1.5rem;
+        }
+        .capsule-button:hover { background-color: rgba(147, 51, 234, 0.15); transform: scale(1.02); }
+
+        #progress-bar { transition: width 0.4s ease; background: linear-gradient(90deg, #3CCCD4 0%, #7C3AED 100%); }
+        .choice-summary { background-color: #F9FAFB; border-radius: 1.5rem; width: 100%; padding: 1.5rem; margin-top: 2rem; border: 1px dashed rgba(60, 204, 212, 0.2); text-align: center; }
+
+        .loading-dots:after {
+            content: '.';
+            animation: dots 1.5s steps(5, end) infinite;
+        }
+        @keyframes dots { 0%, 20% { content: '.'; } 40% { content: '..'; } 60% { content: '...'; } 80%, 100% { content: ''; } }
+    </style>
+</head>
+<body>
+
+<div id="app" class="main-card">
+    <div id="back-button" class="back-btn" onclick="prevStep()">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+        </svg>
+    </div>
+
+    <div id="progress-container" class="absolute top-10 left-0 w-full px-10 hidden">
+        <div class="flex justify-between items-center mb-2 px-1">
+            <span class="text-[11px] font-bold text-[#3CCCD4] uppercase tracking-widest">매칭 진행률</span>
+            <span id="percent-text" class="text-[11px] font-bold text-[#3CCCD4]">0%</span>
+        </div>
+        <div class="w-full bg-gray-100 h-1.5 rounded-full overflow-hidden">
+            <div id="progress-bar" class="h-full w-0 shadow-[0_0_8px_rgba(60,204,212,0.4)]"></div>
+        </div>
+    </div>
+
+    <div id="step-0" class="step active">
+        <h1 class="text-[26px] font-extrabold mb-2 leading-tight tracking-tight animated-title">나의 첫 수익 메이트 매칭</h1>
+        <div class="glass-orb"></div>
+        <p class="text-gray-500 text-[15px] mb-2 leading-relaxed font-medium">최근 당신이 기록한 선명한 기억을 분석하여<br>최적의 수익 파트너를 연결해 드릴게요.</p>
+        <button onclick="startTest()" class="capsule-button">매칭 시작하기 ✨</button>
+    </div>
+
+    <div id="step-1" class="step">
+        <h2 class="text-[20px] font-bold mb-8 text-gray-800 animated-title">최근 이용한 상품 중<br>기억에 남은 한 가지는?</h2>
+        <div class="tarot-grid-3x2">
+            <div onclick="save('q1', '숙소', '🏨')" class="tarot-card"><span>🏨</span><span class="label">숙소</span></div>
+            <div onclick="save('q1', '액티비티', '🎡')" class="tarot-card"><span>🎡</span><span class="label">액티비티</span></div>
+            <div onclick="save('q1', '인테리어', '🛋️')" class="tarot-card"><span>🛋️</span><span class="label">인테리어</span></div>
+            <div onclick="save('q1', '항공권', '✈️')" class="tarot-card"><span>✈️</span><span class="label">항공권</span></div>
+            <div onclick="save('q1', '유심', '📱')" class="tarot-card"><span>📱</span><span class="label">유심</span></div>
+            <div onclick="save('q1', '렌터카', '🚗')" class="tarot-card"><span>🚗</span><span class="label">렌터카</span></div>
+        </div>
+    </div>
+
+    <div id="step-2" class="step">
+        <h2 class="text-[20px] font-bold mb-8 text-gray-800 animated-title">내 블로그는 하루 평균<br>이 정도 방문해요!</h2>
+        <div class="option-grid-vertical">
+            <div onclick="save('q2', '0~300명', '🌱')" class="tarot-card"><span>🌱</span><span class="label">0~300명</span></div>
+            <div onclick="save('q2', '300~2,000명', '🌿')" class="tarot-card"><span>🌿</span><span class="label">300~2,000명</span></div>
+            <div onclick="save('q2', '2,000명 이상', '🌳')" class="tarot-card"><span>🌳</span><span class="label">2,000명 이상</span></div>
+        </div>
+    </div>
+
+    <div id="step-3" class="step">
+        <h2 class="text-[20px] font-bold mb-8 text-gray-800 animated-title">저는 포스팅 작성에<br>이 정도 걸리는 것 같아요!</h2>
+        <div class="option-grid-vertical">
+            <div onclick="save('q3', '30분 이내', '⚡')" class="tarot-card"><span>⚡</span><span class="label">스피드형<br>(~30분)</span></div>
+            <div onclick="save('q3', '1시간 내외', '✍️')" class="tarot-card"><span>✍️</span><span class="label">집중형<br>(~1시간)</span></div>
+            <div onclick="save('q3', '2시간 이상', '💎')" class="tarot-card"><span>💎</span><span class="label">정성형<br>(2시간+)</span></div>
+        </div>
+    </div>
+
+    <div id="step-loading" class="step">
+        <div class="glass-orb scale-75"></div>
+        <h2 class="text-[21px] font-bold text-gray-800 animated-title">
+            나의 데이터 분석 중<span class="loading-dots"></span><br>
+            <span class="text-sm font-medium text-gray-500 mt-2 block">적절한 제휴링크를 찾는 중입니다</span>
+        </h2>
+    </div>
+
+    <div id="step-result" class="step">
+        <div class="mb-2 text-[#3CCCD4] text-[12px] font-black tracking-widest uppercase" id="persona-name"></div>
+        <h2 id="final-brand" class="text-[40px] font-black mb-8 text-gray-900 tracking-tighter leading-tight"></h2>
+        
+        <div class="grid grid-cols-3 gap-3 w-full mb-8">
+            <div class="bg-gray-50 py-4 rounded-2xl border border-gray-100"><p class="text-[10px] text-gray-400 font-bold mb-1 uppercase">수익력</p><p class="font-extrabold text-[#3CCCD4] text-lg">높음</p></div>
+            <div class="bg-gray-50 py-4 rounded-2xl border border-gray-100"><p class="text-[10px] text-gray-400 font-bold mb-1 uppercase">영향력</p><p class="font-extrabold text-[#3CCCD4] text-lg">높음</p></div>
+            <div class="bg-gray-50 py-4 rounded-2xl border border-gray-100"><p class="text-[10px] text-gray-400 font-bold mb-1 uppercase">궁합도</p><p class="font-extrabold text-[#3CCCD4] text-lg"><span id="match-rate"></span></p></div>
+        </div>
+
+        <button onclick="location.reload()" class="capsule-button">제휴링크 생성하러 가기 🔗</button>
+
+        <div class="choice-summary">
+            <p class="text-[11px] font-black text-[#3CCCD4] uppercase mb-2">나의 선택 리포트</p>
+            <p id="user-review" class="text-[13px] font-semibold text-gray-600 leading-relaxed"></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    let answers = {};
+    let currentStepIndex = 0;
+
+    function startTest() { 
+        document.getElementById('progress-container').classList.remove('hidden'); 
+        nextStep(1); 
+    }
+    
+    function nextStep(n) {
+        currentStepIndex = n;
+        document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+        
+        let targetId;
+        const backBtn = document.getElementById('back-button');
+
+        // 뒤로가기 버튼 제어: 문항 1, 2, 3 단계에서만 노출
+        if (n >= 1 && n <= 3) {
+            backBtn.style.display = 'block';
+        } else {
+            backBtn.style.display = 'none';
+        }
+
+        if(n === 'loading') targetId = 'step-loading';
+        else if(n === 'result') targetId = 'step-result';
+        else targetId = 'step-' + n;
+        
+        document.getElementById(targetId).classList.add('active');
+        
+        const progressMap = { 0: 0, 1: 25, 2: 50, 3: 75, 'loading': 90, 'result': 100 };
+        const percent = progressMap[n] !== undefined ? progressMap[n] : 0;
+        document.getElementById('progress-bar').style.width = percent + '%';
+        document.getElementById('percent-text').innerText = percent + '%';
+    }
+
+    // 뒤로가기 로직
+    function prevStep() {
+        if (currentStepIndex > 0) {
+            nextStep(currentStepIndex - 1);
+        }
+    }
+
+    function save(q, val, icon) {
+        answers[q] = { text: val, icon: icon };
+        const cur = parseInt(q.charAt(1));
+        if (cur < 3) {
+            nextStep(cur + 1);
+        } else {
+            showLoading();
+        }
+    }
+
+    function showLoading() {
+        nextStep('loading');
+        setTimeout(() => {
+            calculate();
+        }, 2500);
+    }
+
+    function calculate() {
+        let brand = ""; let persona = "";
+        const q1 = answers.q1.text; const q2 = answers.q2.text; const q3 = answers.q3.text;
+
+        document.getElementById('user-review').innerHTML = `최근 이용한 <span class="text-gray-900 font-bold">${answers.q1.icon} ${q1}</span> 소재를 바탕으로, <span class="text-gray-900 font-bold">${answers.q2.icon} ${q2}</span> 규모 블로그에서 <span class="text-gray-900 font-bold">${answers.q3.icon} ${q3}</span> 스타일로 포스팅하는 크리에이터`;
+
+        if (q1 === '숙소') { brand = "아고다"; persona = "스테이 큐레이터"; }
+        else if (q1 === '액티비티') { brand = "클룩"; persona = "익스피리언스 디렉터"; }
+        else if (q1 === '인테리어') { brand = "오늘의집"; persona = "라이프스타일 에디터"; }
+        else if (q1 === '항공권') { brand = "트립닷컴"; persona = "글로벌 트래블러"; }
+        else if (q1 === '유심') { brand = "유심사"; persona = "데이터 커넥터"; }
+        else if (q1 === '렌터카') { brand = "클룩"; persona = "스마트 로드 가이드"; }
+
+        document.getElementById('persona-name').innerText = "수익 페르소나: " + persona;
+        document.getElementById('final-brand').innerText = brand;
+        
+        const randomMatchRate = Math.floor(Math.random() * (99 - 80 + 1)) + 80;
+        document.getElementById('match-rate').innerText = randomMatchRate + '%';
+
+        nextStep('result');
+    }
+</script>
+</body>
+</html>
