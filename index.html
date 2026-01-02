@@ -301,8 +301,9 @@
         const selectedVisitors = answers.q3.text;
         
         document.getElementById('user-review').innerHTML = 
-            `<span class="text-gray-900 font-bold">${selectedTopic}</span> 중 <span class="text-gray-900 font-bold">${answers.q2.icon} ${selectedProduct}</span> 활용에 특히 능숙하시군요!<br>` +
-            `매일 <span class="text-gray-900 font-bold">${selectedVisitors}</span>명이 찾는 OO님의 블로그는 이미 충분한 영향력을 갖춘 전문 가이드의 공간입니다.`;
+            `최근에 <span class="text-gray-900 font-bold">${answers.q2.icon} ${selectedProduct}</span>을(를) 이용하셨군요! <br>` +
+            `지금 내 블로그 규모 <span class="text-gray-900 font-bold">${selectedVisitors}</span>에 딱 맞는 제휴 프로그램은 <span class="text-gray-900 font-bold">${result.brand}</span>입니다.`;
+            
         document.getElementById('match-rate').innerText = (Math.floor(Math.random() * (100 - 95 + 1)) + 95) + '%';
         nextStep('result');
     }
