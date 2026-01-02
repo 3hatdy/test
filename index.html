@@ -213,14 +213,18 @@
                 </div>
             </div>
 
-            <button onclick="location.reload()" class="capsule-button max-w-[300px] mb-4 btn-incentive">제휴링크 생성하러 가기 🔗</button>
+            <button id="result-link-btn" onclick="goToLandingPage()" class="capsule-button max-w-[300px] mb-4 btn-incentive">제휴링크 생성하러 가기 🔗</button>
         </div>
     </div>
 </div>
 
 <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const aid = urlParams.get('aid') || 'direct';
+
     let answers = {};
     let currentStepIndex = 0;
+    let finalLandingUrl = "";
 
     const q2Options = {
         '여행 포스팅': [
@@ -235,15 +239,15 @@
     };
 
     const affiliateMapping = {
-        '숙소': { brand: '아고다', rate: '최대 2.4%', logo: 'https://raw.githubusercontent.com/teddy4444/my-assets/main/Group%206905.png' },
-        '항공권': { brand: '트립닷컴', rate: '최대 0.9%', logo: 'https://raw.githubusercontent.com/teddy4444/my-assets/main/Group%206688.png' },
-        'e-sim': { brand: '유심사', rate: '최대 6%', logo: 'https://raw.githubusercontent.com/teddy4444/my-assets/main/Group%206909.png' },
-        '액티비티/투어': { brand: '마이리얼트립', rate: '최대 6%', logo: 'https://raw.githubusercontent.com/teddy4444/my-assets/main/Group%206907.png' },
-        '렌터카': { brand: '클룩', rate: '최대 3%', logo: 'https://raw.githubusercontent.com/teddy4444/my-assets/main/Group%206696.png' },
-        '소품': { brand: '오늘의집', rate: '최대 2.5%', logo: 'https://raw.githubusercontent.com/teddy4444/my-assets/main/Group%206692.png' },
-        '가구': { brand: '오늘의집', rate: '최대 2.5%', logo: 'https://raw.githubusercontent.com/teddy4444/my-assets/main/Group%206692.png' },
-        '가전': { brand: '오늘의집', rate: '2.5%', logo: 'https://raw.githubusercontent.com/teddy4444/my-assets/main/Group%206692.png' },
-        '인테리어': { brand: '오늘의집', rate: '최대 2.5%', logo: 'https://raw.githubusercontent.com/teddy4444/my-assets/main/Group%206692.png' }
+        '숙소': { brand: '아고다', rate: '최대 2.4%', logo: 'https://raw.githubusercontent.com/teddy4444/my-assets/main/Group%206905.png', url: 'https://3hoursahead.com/studio/affiliate/programs/agoda' },
+        '항공권': { brand: '트립닷컴', rate: '최대 0.9%', logo: 'https://raw.githubusercontent.com/teddy4444/my-assets/main/Group%206688.png', url: 'https://3hoursahead.com/studio/affiliate/programs/tripcom' },
+        'e-sim': { brand: '유심사', rate: '최대 6%', logo: 'https://raw.githubusercontent.com/teddy4444/my-assets/main/Group%206909.png', url: 'https://3hoursahead.com/studio/affiliate/programs/usimsa' },
+        '액티비티/투어': { brand: '마이리얼트립', rate: '최대 6%', logo: 'https://raw.githubusercontent.com/teddy4444/my-assets/main/Group%206907.png', url: 'https://3hoursahead.com/studio/affiliate/programs/myrealtrip' },
+        '렌터카': { brand: '클룩', rate: '최대 3%', logo: 'https://raw.githubusercontent.com/teddy4444/my-assets/main/Group%206696.png', url: 'https://3hoursahead.com/studio/affiliate/programs/klook' },
+        '소품': { brand: '오늘의집', rate: '최대 2.5%', logo: 'https://raw.githubusercontent.com/teddy4444/my-assets/main/Group%206692.png', url: 'https://3hoursahead.com/studio/affiliate/programs/linkprice_ohouse' },
+        '가구': { brand: '오늘의집', rate: '최대 2.5%', logo: 'https://raw.githubusercontent.com/teddy4444/my-assets/main/Group%206692.png', url: 'https://3hoursahead.com/studio/affiliate/programs/linkprice_ohouse' },
+        '가전': { brand: '오늘의집', rate: '2.5%', logo: 'https://raw.githubusercontent.com/teddy4444/my-assets/main/Group%206692.png', url: 'https://3hoursahead.com/studio/affiliate/programs/linkprice_ohouse' },
+        '인테리어': { brand: '오늘의집', rate: '최대 2.5%', logo: 'https://raw.githubusercontent.com/teddy4444/my-assets/main/Group%206692.png', url: 'https://3hoursahead.com/studio/affiliate/programs/linkprice_ohouse' }
     };
 
     function startTest() { 
@@ -312,8 +316,26 @@
             `지금 내 블로그 규모 <span class="text-gray-900 font-bold">${selectedVisitors}</span>에<br>` +
             `딱 맞는 제휴 프로그램은 <span class="text-gray-900 font-bold">${result.brand}</span>입니다.`;
             
-        document.getElementById('match-rate').innerText = (Math.floor(Math.random() * (100 - 95 + 1)) + 95) + '%';
+        document.getElementById('match-rate').innerText = (Math.floor(Math.random() * 15) + 85) + '%';
+        
+        // 결과 추적 파라미터 구성
+        const queryParams = new URLSearchParams({
+            aid: aid,
+            topic: answers.q1.text,
+            product: selectedProduct,
+            visitors: selectedVisitors,
+            brand: result.brand
+        }).toString();
+        
+        finalLandingUrl = `${result.url}?${queryParams}`;
+        
         nextStep('result');
+    }
+
+    function goToLandingPage() {
+        if (finalLandingUrl) {
+            window.location.href = finalLandingUrl;
+        }
     }
 </script>
 </body>
