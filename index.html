@@ -296,13 +296,14 @@
         document.getElementById('result-rate').innerText = result.rate;
         document.getElementById('final-brand-logo').src = result.logo;
         
-        const selectedTopic = answers.q1.text;
         const selectedProduct = answers.q2.text;
         const selectedVisitors = answers.q3.text;
         
+        // 수정 사항: 문구를 3줄로 고정하여 변수 제외 나머지 말을 동일하게 설정
         document.getElementById('user-review').innerHTML = 
-            `최근에 <span class="text-gray-900 font-bold">${answers.q2.icon} ${selectedProduct}</span>을(를) 이용하셨군요! <br>` +
-            `지금 내 블로그 규모 <span class="text-gray-900 font-bold">${selectedVisitors}</span>에 딱 맞는 제휴 프로그램은 <span class="text-gray-900 font-bold">${result.brand}</span>입니다.`;
+            `최근에 <span class="text-gray-900 font-bold">${answers.q2.icon} ${selectedProduct}</span>을(를) 이용하셨군요!<br>` +
+            `지금 내 블로그 규모 <span class="text-gray-900 font-bold">${selectedVisitors}</span>에<br>` +
+            `딱 맞는 제휴 프로그램은 <span class="text-gray-900 font-bold">${result.brand}</span>입니다.`;
             
         document.getElementById('match-rate').innerText = (Math.floor(Math.random() * (100 - 95 + 1)) + 95) + '%';
         nextStep('result');
