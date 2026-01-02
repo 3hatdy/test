@@ -24,7 +24,6 @@
             padding: 1rem;
         }
 
-        /* 레이아웃 규격 최적화 */
         .main-card {
             width: 100%; max-width: 440px; height: 720px; 
             background: var(--bg-white); border-radius: 3rem;
@@ -41,7 +40,6 @@
         }
         .step.active { display: flex; animation: fadeIn 0.5s ease-out; }
         
-        /* 질문 2 위치 조정을 위한 전용 스타일 */
         #step-2 { justify-content: flex-start; pt-24; padding-top: 11rem; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
@@ -88,7 +86,6 @@
             border-radius: 9999px; width: 100%; padding: 1rem;
             font-weight: 700; font-size: 1.05rem; transition: all 0.2s ease; margin-top: 1.25rem;
         }
-        .capsule-button:hover { background-color: rgba(147, 51, 234, 0.15); transform: translateY(-2px); }
 
         .best-badge {
             background: #3CCCD4; color: white; padding: 4px 12px; border-radius: 20px;
@@ -96,9 +93,14 @@
         }
 
         #progress-bar { transition: width 0.4s ease; background: linear-gradient(90deg, #3CCCD4 0%, #7C3AED 100%); }
-        
-        /* [수정] 리포트 박스 상단 마진을 0으로 조정하여 간격 통일 */
         .choice-summary { background-color: #F9FAFB; border-radius: 1.25rem; width: 100%; padding: 1.25rem; margin-top: 0; border: 1px dashed rgba(60, 204, 212, 0.2); }
+
+        /* 로고 이미지 스타일링 */
+        .brand-logo-img {
+            max-height: 40px;
+            object-fit: contain;
+            margin: 0 auto;
+        }
 
         .loading-dots:after { content: '.'; animation: dots 1.5s steps(5, end) infinite; }
         @keyframes dots { 0%, 20% { content: '.'; } 40% { content: '..'; } 60% { content: '...'; } 80%, 100% { content: ''; } }
@@ -174,7 +176,10 @@
         <div class="flex flex-col items-center w-full py-2"> 
             <div class="w-full mb-8"> 
                 <div class="best-badge">스타터 등급 최고 수수료율 지급 ✨</div>
-                <h2 id="final-brand-main" class="text-[48px] font-black mb-4 text-gray-900 tracking-tighter leading-tight"></h2>
+                <h2 id="final-brand-main" class="text-[48px] font-black mb-2 text-gray-900 tracking-tighter leading-tight"></h2>
+                <div class="mb-4">
+                    <img id="final-brand-logo" src="" alt="제휴사 로고" class="brand-logo-img">
+                </div>
             </div>
             
             <button onclick="location.reload()" class="capsule-button max-w-[300px] mb-4">제휴링크 생성하러 가기 🔗</button>
@@ -218,16 +223,17 @@
         ]
     };
 
+    // [수정] logo 경로 필드 추가
     const affiliateMapping = {
-        '숙소': { brand: '아고다', rate: '최대 2.4%' },
-        '항공권': { brand: '트립닷컴', rate: '최대 0.9%' },
-        'e-sim': { brand: '유심사', rate: '최대 6%' },
-        '액티비티/투어': { brand: '클룩', rate: '최대 3%' },
-        '렌터카': { brand: '클룩', rate: '최대 3%' },
-        '소품': { brand: '오늘의집', rate: '최대 2.5%' },
-        '가구': { brand: '오늘의집', rate: '최대 2.5%' },
-        '가전': { brand: '오늘의집', rate: '2.5%' },
-        '인테리어': { brand: '오늘의집', rate: '최대 2.5%' }
+        '숙소': { brand: '아고다', rate: '최대 2.4%', logo: 'https://postfiles.pstatic.net/MjAyNjAxMDJfMTgy/MDAxNzY3MzMzMTkwMjgz.Vur8XmYea8X-sQf-JuIK3dqYK-rjXz_1ZJmxoysJmlMg.TM9V8qJzWRfWbIh21ZeMoPGIgdtok20fAQxVk6kLCeEg.PNG/Group_6905.png?type=w773 },
+        '항공권': { brand: '트립닷컴', rate: '최대 0.9%', logo: 'https://postfiles.pstatic.net/MjAyNjAxMDJfNzcg/MDAxNzY3MzMzMTkwMzAw.w9n0qy5rMwmfXib-38DCrUErHwqewGYtfq0TjiBf6Eog.21XMgQLDtAudp5kHSvTfX-VaDbWCVxpQvTnJTLyumXUg.PNG/Group_6688.png?type=w773' },
+        'e-sim': { brand: '유심사', rate: '최대 6%', logo: 'https://postfiles.pstatic.net/MjAyNjAxMDJfMjIw/MDAxNzY3MzMzMTkwMzAw.Osmclwhv-ty9Lcfma8ktm_XtS9gomVLsCbEfmP43G0Ug.bJiYKKewTbT0j3EdfN8uAzVIufvZBY2Qpn0dCgacEM4g.PNG/Group_6909.png?type=w773' },
+        '액티비티/투어': { brand: '마이리얼트립', rate: '최대 6%', logo: 'https://postfiles.pstatic.net/MjAyNjAxMDJfMTYx/MDAxNzY3MzMzMTkwMjg3.z0XdSJ5sxP_8ZNaZizgBbus7vpZTf9FM41GJzK8LS28g.LcGLrJj255dyI7SEGqetdfkgxwbxaqh4cFfn56pMyIMg.PNG/Group_6907.png?type=w773' },
+        '렌터카': { brand: '클룩', rate: '최대 3%', logo: 'https://postfiles.pstatic.net/MjAyNjAxMDJfMjgy/MDAxNzY3MzMzMTkwMjg3.lH_u5jFxloC-JONh_fSVswzbKJdchA-bFFT6Yyatddgg.LcGLrJj255dyI7SEGqetdfkgxwbxaqh4cFfn56pMyIMg.PNG/Group_6696.png?type=w773' },
+        '소품': { brand: '오늘의집', rate: '최대 2.5%', logo: 'https://postfiles.pstatic.net/MjAyNjAxMDJfMTk5/MDAxNzY3MzMzMTkwMjk5.70n4qB1B1XMoE4o44EiZOeQ2ZEUsn4UT8q0wDtxx7u4g.lwrS11T2wIsaaQwB2qBJkM2SqcsyQb7iTaXxEPQw8hkg.PNG/Group_6692.png?type=w773' },
+        '가구': { brand: '오늘의집', rate: '최대 2.5%', logo: 'https://postfiles.pstatic.net/MjAyNjAxMDJfMTk5/MDAxNzY3MzMzMTkwMjk5.70n4qB1B1XMoE4o44EiZOeQ2ZEUsn4UT8q0wDtxx7u4g.lwrS11T2wIsaaQwB2qBJkM2SqcsyQb7iTaXxEPQw8hkg.PNG/Group_6692.png?type=w773' },
+        '가전': { brand: '오늘의집', rate: '2.5%', logo: 'https://postfiles.pstatic.net/MjAyNjAxMDJfMTk5/MDAxNzY3MzMzMTkwMjk5.70n4qB1B1XMoE4o44EiZOeQ2ZEUsn4UT8q0wDtxx7u4g.lwrS11T2wIsaaQwB2qBJkM2SqcsyQb7iTaXxEPQw8hkg.PNG/Group_6692.png?type=w773' },
+        '인테리어': { brand: '오늘의집', rate: '최대 2.5%', logo: 'https://postfiles.pstatic.net/MjAyNjAxMDJfMTk5/MDAxNzY3MzMzMTkwMjk5.70n4qB1B1XMoE4o44EiZOeQ2ZEUsn4UT8q0wDtxx7u4g.lwrS11T2wIsaaQwB2qBJkM2SqcsyQb7iTaXxEPQw8hkg.PNG/Group_6692.png?type=w773' }
     };
 
     function startTest() { 
@@ -286,6 +292,9 @@
         const result = affiliateMapping[answers.q2.text];
         document.getElementById('final-brand-main').innerText = result.brand;
         document.getElementById('result-rate').innerText = result.rate;
+        
+        // [추가] 로고 이미지 src 업데이트
+        document.getElementById('final-brand-logo').src = result.logo;
         
         const selectedTopic = answers.q1.text;
         const selectedProduct = answers.q2.text;
