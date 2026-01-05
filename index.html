@@ -8,12 +8,13 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800&display=swap');
         
-        /* Jalnan 2 폰트 정의 */
+        /* Jalnan 2 폰트 정의 - 타 기기 및 모바일 호환성 강화 */
         @font-face {
             font-family: 'Jalnan2';
             src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2310-2@1.0/Jalnan2.woff2') format('woff2');
-            font-weight: normal;
+            font-weight: 100 900;
             font-style: normal;
+            font-display: swap;
         }
 
         :root {
@@ -51,12 +52,14 @@
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* 뒤로가기 버튼 위치: 왼쪽 하단 */
         .back-btn {
             position: absolute; bottom: 2rem; left: 2rem;
             color: #94A3B8; cursor: pointer; transition: all 0.2s ease;
             display: none; z-index: 50;
         }
         
+        /* 매칭 진행률 컨테이너 위치: 상단 */
         #progress-container {
             position: absolute; top: 3.5rem; left: 0; width: 100%; padding: 0 2.5rem;
             z-index: 40; box-sizing: border-box;
@@ -67,6 +70,7 @@
             background-size: 200% auto;
             color: transparent; -webkit-background-clip: text; background-clip: text;
             animation: gradientMove 4s linear infinite; display: inline-block;
+            font-family: 'Jalnan2', sans-serif !important;
         }
         @keyframes gradientMove { to { background-position: 200% center; } }
 
@@ -170,7 +174,10 @@
 
     <div id="step-loading" class="step">
         <div class="glass-orb scale-75 mb-4"></div>
-        <h2 class="text-[20px] font-bold text-gray-800 animated-title">데이터 분석 중<span class="loading-dots"></span><br><span class="text-[13px] font-medium text-gray-500 mt-2 block">가장 알맞은 제휴링크를 찾는 중입니다</span></h2>
+        <h2 class="text-[24px] font-black text-gray-900 leading-tight">
+            데이터 분석 중<br>
+            <span class="text-[15px] font-bold text-gray-700 mt-2 block">가장 알맞은 제휴링크를 찾는 중입니다</span>
+        </h2>
     </div>
 
     <div id="step-result" class="step">
@@ -224,7 +231,7 @@
         '숙소': { brand: '아고다', rate: '최대 2.4%', logo: 'https://raw.githubusercontent.com/3hatdy/my-assets/main/Group%206905.png', url: 'https://3hoursahead.com/studio/affiliate/programs/agoda' },
         '항공권': { brand: '트립닷컴', rate: '최대 0.9%', logo: 'https://raw.githubusercontent.com/3hatdy/my-assets/main/Group%206688.png', url: 'https://3hoursahead.com/studio/affiliate/programs/tripcom' },
         'e-sim': { brand: '유심사', rate: '최대 6%', logo: 'https://raw.githubusercontent.com/3hatdy/my-assets/main/Group%206909.png', url: 'https://3hoursahead.com/studio/affiliate/programs/usimsa' },
-        '액티비티/투어': { brand: '마이리얼트립', rate: '최대 6%', logo: 'https://raw.githubusercontent.com/3hatdy/my-assets/main/Group%206907.png', url: 'https://3hoursahead.com/studio/affiliate/programs/myrealtrip' },
+        '액티비티/투어': { brand: '마이리얼트립', rate: '최대 6%', logo: 'https://fastly.jsdelivr.net/gh/3hatdy/my-assets/main/Group%206907.png', url: 'https://3hoursahead.com/studio/affiliate/programs/myrealtrip' },
         '렌터카': { brand: '클룩', rate: '최대 3%', logo: 'https://raw.githubusercontent.com/3hatdy/my-assets/main/Group%206696.png', url: 'https://3hoursahead.com/studio/affiliate/programs/klook' },
         '소품': { brand: '오늘의집', rate: '최대 2.5%', logo: 'https://raw.githubusercontent.com/3hatdy/my-assets/main/Group%206692.png', url: 'https://3hoursahead.com/studio/affiliate/programs/linkprice_ohouse' },
         '가구': { brand: '오늘의집', rate: '최대 2.5%', logo: 'https://raw.githubusercontent.com/3hatdy/my-assets/main/Group%206692.png', url: 'https://3hoursahead.com/studio/affiliate/programs/linkprice_ohouse' },
@@ -279,9 +286,17 @@
         document.getElementById('final-brand-main').innerText = result.brand;
         document.getElementById('result-rate').innerText = result.rate;
         document.getElementById('final-brand-logo').src = result.logo;
-        document.getElementById('user-review').innerHTML = `최근에 <span class="text-gray-900 font-bold">${answers.q2.icon} ${answers.q2.text}</span>을(를) 이용하셨군요!<br>지금 내 블로그 규모 <span class="text-gray-900 font-bold">${answers.q3.text}</span>에<br>딱 맞는 제휴 프로그램은 <span class="text-gray-900 font-bold">${result.brand}</span>입니다.`;
+        
+        const selectedProduct = answers.q2.text;
+        const selectedVisitors = answers.q3.text;
+        
+        document.getElementById('user-review').innerHTML = 
+            `최근에 <span class="text-gray-900 font-bold">${answers.q2.icon} ${selectedProduct}</span>을(를) 이용하셨군요!<br>` +
+            `지금 내 블로그 규모 <span class="text-gray-900 font-bold">${selectedVisitors}</span>에<br>` +
+            `딱 맞는 제휴 프로그램은 <span class="text-gray-900 font-bold">${result.brand}</span>입니다.`;
+
         document.getElementById('match-rate').innerText = (Math.floor(Math.random() * 15) + 85) + '%';
-        const queryParams = new URLSearchParams({ aid: aid, topic: answers.q1.text, product: answers.q2.text, visitors: answers.q3.text, brand: result.brand }).toString();
+        const queryParams = new URLSearchParams({ aid: aid, topic: answers.q1.text, product: selectedProduct, visitors: selectedVisitors, brand: result.brand }).toString();
         finalLandingUrl = `${result.url}?${queryParams}`;
         nextStep('result');
     }
