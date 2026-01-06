@@ -232,21 +232,24 @@
 
 <script>
     const urlParams = new URLSearchParams(window.location.search);
-const aid = urlParams.get('aid') || 'direct'; // AID 로직 유지
+    const aid = urlParams.get('aid') || 'direct'; // AID 로직 유지
 
-let answers = {};
-let currentStepIndex = 0;
-let finalLandingUrl = "";
+    let answers = {};
+    let currentStepIndex = 0;
+    let finalLandingUrl = "";
     
-function setAnswer(key, value) {
-    if (typeof value === 'string') {
-        // 문자열인 경우, 모든 쉼표(,)를 빈 문자열('')로 대체하여 제거
-        answers[key] = value.replace(/,/g, '');
-    } else {
-        // 문자열이 아니면(숫자 등) 그대로 저장
-        answers[key] = value;
+    // 요청하신 수정된 setAnswer 함수 (디코딩 및 쉼표 제거)
+    function setAnswer(key, value) {
+        if (typeof value === 'string') {
+            // 1단계: %2F, %2C 같은 인코딩 문자를 원래 특수문자(/, ,)로 복구
+            let decodedValue = decodeURIComponent(value);
+
+            // 2단계: 그 후 쉼표(,) 제거
+            answers[key] = decodedValue.replace(/,/g, ''); 
+        } else {
+            answers[key] = value;
+        }
     }
-}
     
     const q2Options = {
         '여행 포스팅': [{ text: '숙소', icon: '🏨' }, { text: '항공권', icon: '✈️' }, { text: 'e-sim', icon: '📱' }, { text: '액티비티/투어', icon: '🎡' }, { text: '렌터카', icon: '🚗' }],
@@ -301,7 +304,15 @@ function setAnswer(key, value) {
     }
 
     function save(q, val, icon) {
-        answers[q] = { text: val, icon: icon };
+        // [수정 적용] 여기서 setAnswer의 정제 로직(디코딩 및 쉼표 제거)을 적용해 줍니다.
+        let cleanVal = val;
+        if (typeof val === 'string') {
+            cleanVal = decodeURIComponent(val).replace(/,/g, '');
+        }
+        
+        // 정제된 값(cleanVal)을 저장합니다. (예: "2,000" -> "2000")
+        answers[q] = { text: cleanVal, icon: icon };
+        
         const cur = parseInt(q.charAt(1));
         if (cur < 3) nextStep(cur + 1);
         else { nextStep('loading'); setTimeout(() => calculate(), 2500); }
